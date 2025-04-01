@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Крестики Нолики с Роботом</title>
+    <!-- Linc To CSS -->
+  <link rel="stylesheet" href="/CSS/main.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 5px;
+            margin: 20px auto;
+            width: 320px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            background-color: #f0e8ef;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .cell:hover {
+            background-color: #8fc8ca;
+        }
+        .cell.taken {
+            cursor: not-allowed;
+        }
+        .cell.X {
+            background-color: #ce6d6dee;
+        }
+        .cell.O {
+            background-color: #91d391;
+        }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="board" id="board"></div>
+    <div class="message" id="message"></div>
+    <button onclick="restartGame()">Сбросить игру</button>
+
+    <script>
+        const board = document.getElementById('board');
+        const message = document.getElementById('message');
+        let currentPlayer = 'X'; // Игрок всегда начинает первым
+        let gameActive = true;
+        const cells = Array(9).fill(null);
+
+        const winningConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+
+        function createBoard() {
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.addEventListener('click', () => handleCellClick(i, cell));
+                board.appendChild(cell);
+            }
+        }
+
+        function handleCellClick(index, cell) {
+            if (cells[index] || !gameActive) return;
+
+            cells[index] = currentPlayer;
+            cell.textContent = currentPlayer;
+            cell.classList.add('taken', currentPlayer);
+            checkWinner();
+            if (gameActive) {
+                currentPlayer = 'O'; // Робот ходит
+                robotMove();
+            }
+        }
+
+        function robotMove() {
+            const availableCells = cells
+                .map((cell, index) => (cell === null ? index : null))
+                .filter(index => index !== null);
+            
+            if (availableCells.length > 0) {
+                const randomIndex = availableCells[Math.floor(Math.random() * availableCells.length)];
+                cells[randomIndex] = currentPlayer;
+                const cellElements = document.querySelectorAll('.cell');
+                cellElements[randomIndex].textContent = currentPlayer;
+                cellElements[randomIndex].classList.add('taken', currentPlayer);
+                checkWinner();
+                currentPlayer = 'X'; // Возвращаем ход игроку
+            }
+        }
+
+        function checkWinner() {
+            let roundWon = false;
+            for (const condition of winningConditions) {
+                const [a, b, c] = condition;
+                if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+                    roundWon = true;
+                    break;
+                }
+            }
+            if (roundWon) {
+                message.textContent = `Игрок ${currentPlayer} выиграл!`;
+                gameActive = false;
+            } else if (!cells.includes(null)) {
+                message.textContent = 'Ничья!';
+                gameActive = false;
+            }
+        }
+
+        function restartGame() {
+
+            cells.fill(null);
+            gameActive = true;
+            currentPlayer = 'X';
+            renderBoard();
+            message.textContent = '';
+        }
+
+        function renderBoard() {
+            const cellElements = document.querySelectorAll('.cell');
+            cells.forEach((cell, index) => {
+                cellElements[index].textContent = cell;
+                cellElements[index].className = 'cell';
+                if (cell) {
+                    cellElements[index].classList.add('taken', cell);
+                }
+            });
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>

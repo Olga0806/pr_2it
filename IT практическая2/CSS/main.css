@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    background-image: url(/Image/vMsKY6wG00U.jpg); /* Замените на URL вашего фона */
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 5px;
+    margin: 20px auto;
+    width: 320px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон для доски */
+    box-shadow: 0 0 10px rgba(238, 21, 21, 0.2);
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: 1px solid #ce3aba; /* Граница клетки */
+    border-radius: 5px;
+}
+
+.cell:hover {
+    background-color: #e6abf1;
+}
+
+.cell.taken {
+    cursor: not-allowed;
+}
+
+.cell.X {
+    background-color: #ffcccc;
+}
+
+.cell.O {
+    background-color: #ccffcc;
+}
+
+.message {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.5em;
+    color: #32d15a;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #df9322;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #10caca;
+}
